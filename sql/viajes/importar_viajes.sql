@@ -31,36 +31,7 @@ CREATE TABLE vialis.viajes_raw (
 -- 3. Actualizar estadísticas de la tabla viajes_raw --
 VACUUM ANALYZE vialis.viajes_raw;
 
--- 4. Crear tabla viajes --
-CREATE TABLE vialis.viajes (
-
-    id_tarjeta BIGINT,
-    id_viaje SMALLINT,
-    cantidad_etapas SMALLINT,
-    rango_horario SMALLINT,
-
-    etapas_subte SMALLINT,
-    etapas_tren SMALLINT,
-    etapas_colectivo SMALLINT,
-
-    geom_origen geometry(Point,4326),
-
-    geom_destino geometry(Point,4326),
-
-    h3_origen CHAR(15),
-    h3_destino CHAR(15),
-
-    departamento_origen_viaje CHAR(5),
-    departamento_destino_viaje CHAR(5),
-
-    factor_expansion_viaje REAL,
-
-    etapas_incompletas CHAR(1),
-    genero CHAR(1),
-    grupo_edad SMALLINT
-);
-
--- 5. Insertar datos en la tabla viajes desde viajes_raw (para guardar puntos en vez de longitud y latitud) --
+-- 4. Insertar datos en la tabla viajes desde viajes_raw (para guardar puntos en vez de longitud y latitud) --
 INSERT INTO vialis.viajes (
 
     id_tarjeta,
@@ -136,3 +107,7 @@ USING GIST (geom_destino);
 -- 7. Actualizar estadísticas de la tabla viajes --
 VACUUM ANALYZE vialis.viajes;
 
+-- 8. Agregar numeros de celda h3 a cada viaje
+UPDATE vialis.viajes
+SET h3_origen = h3_lat_lng_to_cell(geom_origen, 8),
+    h3_origen = h3_lat_lng_to_cell(geom_destino, 8);
