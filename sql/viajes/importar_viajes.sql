@@ -110,4 +110,4 @@ VACUUM ANALYZE vialis.viajes;
 -- 8. Agregar numeros de celda h3 a cada viaje
 UPDATE vialis.viajes
 SET h3_origen = h3_lat_lng_to_cell(geom_origen, 8),
-    h3_origen = h3_lat_lng_to_cell(geom_destino, 8);
+    h3_destino = h3_lat_lng_to_cell(geom_destino, 8);
