@@ -26,3 +26,11 @@ CREATE TABLE vialis.viajes
     grupo_edad                 SMALLINT
 );
 
+-- Matriz origen-destino --
+CREATE TABLE vialis.matriz_origen_destino (
+    h3_origen CHAR(15) NOT NULL,
+    h3_destino CHAR(15) NOT NULL,
+    cantidad_viajes DOUBLE PRECISION NOT NULL,
+    PRIMARY KEY (h3_origen, h3_destino)
+);
+
