@@ -9,9 +9,9 @@ CREATE TABLE vialis.viajes
     etapas_tren                SMALLINT,
     etapas_colectivo           SMALLINT,
 
-    geom_origen                geometry(Point, 4326),
+    geom_origen                GEOMETRY(Point, 4326),
 
-    geom_destino               geometry(Point, 4326),
+    geom_destino               GEOMETRY(Point, 4326),
 
     h3_origen                  CHAR(15),
     h3_destino                 CHAR(15),
@@ -26,11 +26,19 @@ CREATE TABLE vialis.viajes
     grupo_edad                 SMALLINT
 );
 
+-- Hexagono H3 --
+CREATE TABLE vialis.hexagonos_viajes (
+    indice_h3 CHAR(15) PRIMARY KEY,
+    punto_maxima_concurrencia GEOMETRY(Point, 4326),
+    concurrencia DOUBLE PRECISION NOT NULL
+);
+
 -- Matriz origen-destino --
 CREATE TABLE vialis.matriz_origen_destino (
-    h3_origen CHAR(15) NOT NULL,
-    h3_destino CHAR(15) NOT NULL,
+    h3_origen CHAR(15) NOT NULL
+        REFERENCES vialis.hexagonos_viajes(indice_h3),
+    h3_destino CHAR(15) NOT NULL
+        REFERENCES vialis.hexagonos_viajes(indice_h3),
     cantidad_viajes DOUBLE PRECISION NOT NULL,
     PRIMARY KEY (h3_origen, h3_destino)
 );
-
