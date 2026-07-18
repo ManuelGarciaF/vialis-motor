@@ -63,25 +63,25 @@ La tabla no posee actualmente una clave primaria. El par `id_tarjeta` e
 `id_viaje` conserva los identificadores de la fuente y permite relacionar el
 viaje con sus etapas cuando se dispone de la tabla de etapas.
 
-| Columna | Significado |
-|---|---|
-| `id_tarjeta` | Identificador enmascarado de la tarjeta SUBE |
-| `id_viaje` | Identificador del viaje asociado a la tarjeta |
-| `cantidad_etapas` | Cantidad de etapas válidas y completas que forman el viaje |
-| `rango_horario` | Hora o franja horaria asignada al viaje por la fuente |
-| `etapas_subte` | Cantidad de etapas realizadas en subte |
-| `etapas_tren` | Cantidad de etapas realizadas en tren |
-| `etapas_colectivo` | Cantidad de etapas realizadas en colectivo |
-| `geom_origen` | Punto de origen agregado, como `GEOMETRY(Point, 4326)` |
-| `geom_destino` | Punto de destino agregado, como `GEOMETRY(Point, 4326)` |
-| `h3_origen` | Índice de la celda H3 de resolución 8 que contiene el origen |
-| `h3_destino` | Índice de la celda H3 de resolución 8 que contiene el destino |
-| `departamento_origen_viaje` | Código censal del departamento de origen |
-| `departamento_destino_viaje` | Código censal del departamento de destino |
-| `factor_expansion_viaje` | Peso utilizado para expandir el registro de la muestra a una estimación de viajes |
-| `etapas_incompletas` | Indicador de que alguna etapa no tiene un destino imputado |
-| `genero` | Género registrado para la persona asociada a la tarjeta SUBE |
-| `grupo_edad` | Grupo de edad de cinco años registrado para esa persona |
+| Columna                      | Significado                                                                       |
+|------------------------------|-----------------------------------------------------------------------------------|
+| `id_tarjeta`                 | Identificador enmascarado de la tarjeta SUBE                                      |
+| `id_viaje`                   | Identificador del viaje asociado a la tarjeta                                     |
+| `cantidad_etapas`            | Cantidad de etapas válidas y completas que forman el viaje                        |
+| `rango_horario`              | Hora o franja horaria asignada al viaje por la fuente                             |
+| `etapas_subte`               | Cantidad de etapas realizadas en subte                                            |
+| `etapas_tren`                | Cantidad de etapas realizadas en tren                                             |
+| `etapas_colectivo`           | Cantidad de etapas realizadas en colectivo                                        |
+| `geom_origen`                | Punto de origen agregado, como `GEOMETRY(Point, 4326)`                            |
+| `geom_destino`               | Punto de destino agregado, como `GEOMETRY(Point, 4326)`                           |
+| `h3_origen`                  | Índice de la celda H3 de resolución 8 que contiene el origen                      |
+| `h3_destino`                 | Índice de la celda H3 de resolución 8 que contiene el destino                     |
+| `departamento_origen_viaje`  | Código censal del departamento de origen                                          |
+| `departamento_destino_viaje` | Código censal del departamento de destino                                         |
+| `factor_expansion_viaje`     | Peso utilizado para expandir el registro de la muestra a una estimación de viajes |
+| `etapas_incompletas`         | Indicador de que alguna etapa no tiene un destino imputado                        |
+| `genero`                     | Género registrado para la persona asociada a la tarjeta SUBE                      |
+| `grupo_edad`                 | Grupo de edad de cinco años registrado para esa persona                           |
 
 ### Identificadores
 
@@ -124,11 +124,11 @@ Contiene una fila por celda H3 de resolución 8 observada como origen o destino.
 No almacena el polígono de la celda: este puede derivarse cuando se consulta a
 partir de `indice_h3`.
 
-| Columna | Significado |
-|---|---|
-| `indice_h3` | Identificador H3 de resolución 8 y clave primaria de la tabla |
-| `punto_maxima_concurrencia` | Punto de origen o destino con mayor peso acumulado dentro de la celda |
-| `concurrencia` | Suma de factores de expansión correspondiente únicamente al punto seleccionado |
+| Columna                     | Significado                                                                    |
+|-----------------------------|--------------------------------------------------------------------------------|
+| `indice_h3`                 | Identificador H3 de resolución 8 y clave primaria de la tabla                  |
+| `punto_maxima_concurrencia` | Punto de origen o destino con mayor peso acumulado dentro de la celda          |
+| `concurrencia`              | Suma de factores de expansión correspondiente únicamente al punto seleccionado |
 
 ### Cálculo del punto de máxima concurrencia
 

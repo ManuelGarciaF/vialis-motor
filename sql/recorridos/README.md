@@ -39,15 +39,15 @@ Las tablas de importación usan el prefijo `gtfs_` y el sufijo `_raw`. Sus
 columnas mantienen los nombres originales de GTFS y todavía no contienen
 geometrías PostGIS.
 
-| Archivo | Tabla raw | Contenido principal |
-|---|---|---|
-| `agency.txt` | `vialis.gtfs_agency_raw` | Empresas operadoras |
-| `routes.txt` | `vialis.gtfs_routes_raw` | Líneas y ramales publicados |
-| `trips.txt` | `vialis.gtfs_trips_raw` | Viajes, dirección, destino y `shape_id` |
-| `stops.txt` | `vialis.gtfs_stops_raw` | Paradas físicas y coordenadas |
-| `stop_times.txt` | `vialis.gtfs_stop_times_raw` | Secuencia de paradas de cada viaje |
-| `shapes.txt` | `vialis.gtfs_shapes_raw` | Puntos ordenados de cada geometría |
-| `calendar_dates.txt` | `vialis.gtfs_calendar_dates_raw` | Fechas habilitadas por `service_id` |
+| Archivo              | Tabla raw                        | Contenido principal                     |
+|----------------------|----------------------------------|-----------------------------------------|
+| `agency.txt`         | `vialis.gtfs_agency_raw`         | Empresas operadoras                     |
+| `routes.txt`         | `vialis.gtfs_routes_raw`         | Líneas y ramales publicados             |
+| `trips.txt`          | `vialis.gtfs_trips_raw`          | Viajes, dirección, destino y `shape_id` |
+| `stops.txt`          | `vialis.gtfs_stops_raw`          | Paradas físicas y coordenadas           |
+| `stop_times.txt`     | `vialis.gtfs_stop_times_raw`     | Secuencia de paradas de cada viaje      |
+| `shapes.txt`         | `vialis.gtfs_shapes_raw`         | Puntos ordenados de cada geometría      |
+| `calendar_dates.txt` | `vialis.gtfs_calendar_dates_raw` | Fechas habilitadas por `service_id`     |
 
 Las tablas raw son `UNLOGGED` porque son staging descartable: el importador las
 elimina y recrea antes de cada carga completa. Los identificadores se almacenan
@@ -74,13 +74,13 @@ La transformación también genera dos campos derivados:
 
 Ejemplos:
 
-| `route_short_name` | `linea` | `ramal` |
-|---|---|---|
-| `7A` | `7` | `A` |
-| `505R3` | `505` | `R3` |
-| `AZUL1` | `AZUL` | `1` |
-| `ROJA` | `ROJA` | `TRONCAL` |
-| `OE16V` | `OE` | `16V` |
+| `route_short_name` | `linea` | `ramal`   |
+|--------------------|---------|-----------|
+| `7A`               | `7`     | `A`       |
+| `505R3`            | `505`   | `R3`      |
+| `AZUL1`            | `AZUL`  | `1`       |
+| `ROJA`             | `ROJA`  | `TRONCAL` |
+| `OE16V`            | `OE`    | `16V`     |
 
 La separación es una convención de Vialis, no una regla definida por GTFS. Por
 eso `nombre_publico` conserva siempre el valor original.
@@ -152,26 +152,26 @@ la mediana de las duraciones de todos los viajes del mismo
 Representa una parada física única. Una parada puede aparecer en muchos
 recorridos, por lo que no contiene una clave foránea directa a `recorridos`.
 
-| Columna | Significado |
-|---|---|
-| `id_parada` | Identificador interno de Vialis |
-| `gtfs_stop_id` | Identificador original de GTFS |
-| `codigo` | Código público de la parada, si existe |
-| `nombre` | Nombre procedente de `stops.txt` |
-| `posicion` | Punto PostGIS con SRID 4326 |
+| Columna        | Significado                            |
+|----------------|----------------------------------------|
+| `id_parada`    | Identificador interno de Vialis        |
+| `gtfs_stop_id` | Identificador original de GTFS         |
+| `codigo`       | Código público de la parada, si existe |
+| `nombre`       | Nombre procedente de `stops.txt`       |
+| `posicion`     | Punto PostGIS con SRID 4326            |
 
 ### `vialis.recorridos_paradas`
 
 Es la relación ordenada entre recorridos y paradas. Permite reutilizar una misma
 parada física sin duplicar su nombre ni sus coordenadas.
 
-| Columna | Significado |
-|---|---|
-| `id_recorrido` | Recorrido al que pertenece la aparición |
-| `id_parada` | Parada física referenciada |
-| `nro_parada` | Orden procedente de `stop_sequence` |
-| `tramo_hasta_siguiente` | Porción del `shape` hasta la próxima parada |
-| `distancia_hasta_siguiente_metros` | Longitud geográfica de ese tramo |
+| Columna                            | Significado                                 |
+|------------------------------------|---------------------------------------------|
+| `id_recorrido`                     | Recorrido al que pertenece la aparición     |
+| `id_parada`                        | Parada física referenciada                  |
+| `nro_parada`                       | Orden procedente de `stop_sequence`         |
+| `tramo_hasta_siguiente`            | Porción del `shape` hasta la próxima parada |
+| `distancia_hasta_siguiente_metros` | Longitud geográfica de ese tramo            |
 
 La última parada de cada recorrido tiene el tramo y la distancia en `NULL`, ya
 que no existe una parada siguiente.
