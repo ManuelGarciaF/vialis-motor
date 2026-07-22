@@ -2,17 +2,30 @@ package config
 
 import (
 	"fmt"
+	"net"
+	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
 const (
+	defaultDatabaseHost     = "localhost"
+	defaultDatabasePort     = "5432"
+	defaultDatabaseName     = "vialis"
+	defaultDatabaseUser     = "postgres"
+	defaultDatabasePassword = "postgres"
+
 	defaultHTTPAddress       = ":8080"
 	defaultReadHeaderTimeout = 5 * time.Second
 	defaultReadTimeout       = 10 * time.Second
 	defaultWriteTimeout      = 30 * time.Second
 	defaultIdleTimeout       = 60 * time.Second
+
+	// SimulationAccessRadiusMeters is the maximum walking distance between a
+	// stop and a cell's point of maximum concurrence.
+	SimulationAccessRadiusMeters = 800.0
 )
 
 // Config contains the runtime settings for the HTTP service.
@@ -27,9 +40,9 @@ type Config struct {
 
 // FromEnv loads configuration from environment variables and applies safe defaults.
 func FromEnv() (Config, error) {
-	databaseURL := strings.TrimSpace(os.Getenv("DATABASE_URL"))
-	if databaseURL == "" {
-		return Config{}, fmt.Errorf("DATABASE_URL is required")
+	databaseURL, err := databaseURLFromEnv()
+	if err != nil {
+		return Config{}, err
 	}
 
 	cfg := Config{
@@ -65,6 +78,40 @@ func FromEnv() (Config, error) {
 	}
 
 	return cfg, nil
+}
+
+func databaseURLFromEnv() (string, error) {
+	if databaseURL := strings.TrimSpace(os.Getenv("DATABASE_URL")); databaseURL != "" {
+		return databaseURL, nil
+	}
+
+	host := strings.TrimSpace(valueOrDefault("DATABASE_HOST", defaultDatabaseHost))
+	port := strings.TrimSpace(valueOrDefault("DATABASE_PORT", defaultDatabasePort))
+	databaseName := strings.TrimSpace(valueOrDefault("DATABASE_NAME", defaultDatabaseName))
+	user := strings.TrimSpace(valueOrDefault("DATABASE_USER", defaultDatabaseUser))
+	password := valueOrDefault("DATABASE_PASSWORD", defaultDatabasePassword)
+
+	parsedPort, err := strconv.Atoi(port)
+	if err != nil || parsedPort < 1 || parsedPort > 65535 {
+		return "", fmt.Errorf("DATABASE_PORT must be between 1 and 65535: %q", port)
+	}
+	if host == "" {
+		return "", fmt.Errorf("DATABASE_HOST must not be empty")
+	}
+	if databaseName == "" {
+		return "", fmt.Errorf("DATABASE_NAME must not be empty")
+	}
+	if user == "" {
+		return "", fmt.Errorf("DATABASE_USER must not be empty")
+	}
+
+	databaseURL := url.URL{
+		Scheme: "postgresql",
+		User:   url.UserPassword(user, password),
+		Host:   net.JoinHostPort(host, port),
+		Path:   databaseName,
+	}
+	return databaseURL.String(), nil
 }
 
 func valueOrDefault(name, defaultValue string) string {

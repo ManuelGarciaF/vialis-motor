@@ -4,11 +4,16 @@ Servicio REST en Go para el motor de simulación de Vialis.
 
 ## Configuración
 
-La aplicación requiere la variable `DATABASE_URL` con la conexión a PostgreSQL:
+La conexión local predeterminada es:
 
 ```text
-postgres://<usuario>:<clave>@<host>:<puerto>/<base_de_datos>
+postgresql://postgres:postgres@localhost:5432/vialis
 ```
+
+Cada componente puede configurarse por separado con `DATABASE_HOST`,
+`DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER` y `DATABASE_PASSWORD`.
+`DATABASE_URL` permite reemplazar la conexión completa y tiene prioridad sobre
+las variables individuales.
 
 Opcionalmente, `HTTP_ADDRESS` permite cambiar la dirección de escucha; su valor
 predeterminado es `:8080`.
@@ -29,3 +34,23 @@ disponible. Si no puede conectarse, finaliza con error.
 ```json
 {"status":"ok"}
 ```
+
+## Probar una simulación
+
+El ejecutable de prueba utiliza la configuración PostgreSQL del proyecto y
+simula las 17 paradas provistas para el recorrido de la línea 132:
+
+```bash
+go run ./cmd/simulation-test
+```
+
+Para indicar otro recorrido, repetir `-stop` respetando el orden:
+
+```bash
+go run ./cmd/simulation-test \
+  -stop "A,-34.6037,-58.3816" \
+  -stop "B,-34.6083,-58.3712" \
+  -stop "C,-34.6142,-58.3608"
+```
+
+La conexión también puede reemplazarse con `-database-url`.
