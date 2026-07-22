@@ -6,7 +6,7 @@
 -- independientes en un mismo conjunto.
 WITH puntos AS (
     SELECT
-        h3_origen::TEXT AS h3,
+        h3_origen AS h3,
         geom_origen AS geom,
         COALESCE(factor_expansion_viaje::DOUBLE PRECISION, 0.0) AS peso
     FROM vialis.viajes
@@ -16,7 +16,7 @@ WITH puntos AS (
     UNION ALL
 
     SELECT
-        h3_destino::TEXT AS h3,
+        h3_destino AS h3,
         geom_destino AS geom,
         COALESCE(factor_expansion_viaje::DOUBLE PRECISION, 0.0) AS peso
     FROM vialis.viajes

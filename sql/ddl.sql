@@ -13,8 +13,8 @@ CREATE TABLE vialis.viajes
 
     geom_destino               GEOMETRY(Point, 4326),
 
-    h3_origen                  CHAR(15),
-    h3_destino                 CHAR(15),
+    h3_origen                  H3INDEX,
+    h3_destino                 H3INDEX,
 
     departamento_origen_viaje  CHAR(5),
     departamento_destino_viaje CHAR(5),
@@ -28,16 +28,16 @@ CREATE TABLE vialis.viajes
 
 -- Hexagono H3 --
 CREATE TABLE vialis.hexagonos_viajes (
-    indice_h3 CHAR(15) PRIMARY KEY,
+    indice_h3 H3INDEX PRIMARY KEY,
     punto_maxima_concurrencia GEOMETRY(Point, 4326),
     concurrencia DOUBLE PRECISION NOT NULL
 );
 
 -- Matriz origen-destino --
 CREATE TABLE vialis.matriz_origen_destino (
-    h3_origen CHAR(15) NOT NULL
+    h3_origen H3INDEX NOT NULL
         REFERENCES vialis.hexagonos_viajes(indice_h3),
-    h3_destino CHAR(15) NOT NULL
+    h3_destino H3INDEX NOT NULL
         REFERENCES vialis.hexagonos_viajes(indice_h3),
     cantidad_viajes DOUBLE PRECISION NOT NULL,
     PRIMARY KEY (h3_origen, h3_destino)

@@ -53,6 +53,10 @@ Los índices `h3_origen` y `h3_destino` se calculan con resolución H3 8. En
 `viajes` funcionan como referencias lógicas: el DDL actual no declara claves
 foráneas desde esa tabla hacia `hexagonos_viajes`.
 
+Las columnas H3 utilizan el tipo nativo `h3index`. Esto permite validar sus
+valores y utilizarlos directamente con las funciones de la extensión, sin
+conversiones intermedias a texto.
+
 ## `vialis.viajes`
 
 Contiene una fila por viaje inferido en la carga del día típico. Las coordenadas
@@ -165,11 +169,11 @@ SELECT
     indice_h3,
     punto_maxima_concurrencia,
     concurrencia,
-    h3_cell_to_boundary_geometry(indice_h3::h3index) AS geom
+    h3_cell_to_boundary_geometry(indice_h3) AS geom
 FROM vialis.hexagonos_viajes;
 ```
 
-El cast directo `indice_h3::h3index::geometry` representa el centro de la celda,
+El cast directo `indice_h3::geometry` representa el centro de la celda,
 no su contorno. Para visualizar el área se debe usar
 `h3_cell_to_boundary_geometry`.
 
